@@ -1,4 +1,4 @@
-import { Connection, Client, WorkflowClient } from '@temporalio/client';
+import { Connection, WorkflowClient } from '@temporalio/client';
 
 export async function getConnection(connectionSettings: any = {}){
   return await Connection.connect({ ...connectionSettings});
@@ -23,7 +23,7 @@ export function getNewClient(connection: any, clientSettings: any = {}): Workflo
 export async function startWorkflow(client: WorkflowClient, workflow: any,
   workflowExecutionArguments: any,
   workflowExecuteQueue: any,
-  workflowExecutionId: any, connectionSettings = {}, clientSettings = {}) {
+  workflowExecutionId: any) {
   const handle = await client.start(workflow, {
     args: [workflowExecutionArguments],
     taskQueue: workflowExecuteQueue,
