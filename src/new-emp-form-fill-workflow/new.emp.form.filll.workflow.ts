@@ -45,7 +45,7 @@ export async function NewEmpFormFillWorkflow(initialState: NewEmpFormFillWorkflo
   let workflowState = { ...initialState };
   // destruct the required elements for workflow operation from workflow state
   const {
-    periodGivenForFormFillling = '90 seconds',
+    periodGivenForFormFillling: periodGivenForFormFilling = '90 seconds',
     numberOfRemindersForFormFilling = 3,
     formFilingReminderDuration = '20 seconds',
     followUpTaskCreated = false,
@@ -59,9 +59,10 @@ export async function NewEmpFormFillWorkflow(initialState: NewEmpFormFillWorkflo
   wf.setHandler(getWorkflowState, ()=>workflowState)
   
   mainLoop:
+  // eslint-disable-next-line no-constant-condition
   while(true) {
     // code the workflow
-    if(await wf.condition(() => workflowState.newEmployeeFormFilled, periodGivenForFormFillling)) {
+    if(await wf.condition(() => workflowState.newEmployeeFormFilled, periodGivenForFormFilling)) {
       // new Employee form Filled, 
       if(followUpTaskCreated) {
         // TODO: call the activity to complete the follow up task

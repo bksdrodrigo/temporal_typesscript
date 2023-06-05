@@ -9,8 +9,22 @@ This diagram represents the flow of the New Employee Form Fill Workflow.
 graph LR
     A((Start)) --> B{Form Filled?}
     B -- Yes --> C{follow up Task Exists?}
-    C -- Yes --> D[Call Actity: Complete Follow Up Task]
+    C -- Yes --> D[Call Activity: Complete Follow Up Task]
     D --> E((End))
     C -- No --> E
-    B -- No --> F[Call Actity: Send Reminder]
-    F-->G{Follow Up Task Exists?}
+    B -- No --> F{has periodGivenForFormFilling expired?}
+    F -- No -->B
+    F -- Yes -->G{has numberOfRemindersForFormFilling sent?}
+    %% Perhaps we need to have a different approach here to handle all reminders are sent
+    G -- Yes -->A 
+    G -- No --> H[Call Activity: Send the Reminder]
+    H -->I{Followup Task Already Exists?}
+    I -- No --> J[Call Activity: Create Followup Task]
+    I -- Yes --> K[Call Activity: Update Followup Task Priority]
+    J -->L{Form Filled?}
+    K -->L
+    L -- Yes -->C
+    L -- No --> M{Has formFilingReminderDuration expired?}
+    M -- No --> L
+    M -- Yes -->G
+
