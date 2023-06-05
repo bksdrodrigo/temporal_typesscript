@@ -1,6 +1,6 @@
 import { SubscriptionWorkflowV1 , signals, queries, SubscriptionWorkflowState} from './subscription.workflow';
 import { nanoid } from 'nanoid';
-import { getConnection, getNewClient, startWorkflow } from './core/client'
+import { getConnection, getNewClient, startWorkflow } from '../core/client'
 
 export async function run() {
   const workflowExecutionArguments: SubscriptionWorkflowState = {
