@@ -20,7 +20,7 @@ export type HRFollowUpTask = {
 export type NewEmpFormFillWorkflowState = {
   employee: NewEmployeeNotJoined,
   welcomeEmailSent: boolean,
-  periodGivenForFormFillling: string | number,
+  periodGivenForFormFilling: string | number,
   numberOfRemindersForFormFilling: number,
   formFilingReminderDuration: string | number,
   newEmployeeFormFilled: boolean,
@@ -29,8 +29,8 @@ export type NewEmpFormFillWorkflowState = {
 }
 
 export const signals = {
-  rejectEmployeement: wf.defineSignal('rejectEmploymentSignal'),
-  cancelEmployement: wf.defineSignal('cancelEmploymentSignal'),
+  rejectEmployment: wf.defineSignal('rejectEmploymentSignal'),
+  cancelEmployment: wf.defineSignal('cancelEmploymentSignal'),
   filledNewEmpForm: wf.defineSignal('fillNewEmployeeFormSignal'),
 }
 export const queries = {
@@ -45,11 +45,10 @@ export async function NewEmpFormFillWorkflow(initialState: NewEmpFormFillWorkflo
   let workflowState = { ...initialState };
   // destruct the required elements for workflow operation from workflow state
   const {
-    periodGivenForFormFillling: periodGivenForFormFilling = '90 seconds',
+    periodGivenForFormFilling: periodGivenForFormFilling = '90 seconds',
     numberOfRemindersForFormFilling = 3,
     formFilingReminderDuration = '20 seconds',
     followUpTaskCreated = false,
-    followUpTask = undefined
   } = workflowState
   
   // destruct signals and queries and set handlers
@@ -77,7 +76,7 @@ export async function NewEmpFormFillWorkflow(initialState: NewEmpFormFillWorkflo
         if(await wf.condition(() => workflowState.newEmployeeFormFilled, formFilingReminderDuration)) {
           // TODO: call the activity to complete the follow up task
           console.log('Call the activty to complete the follow up task')
-          break mainLoop;
+          break
         }
       }
     }

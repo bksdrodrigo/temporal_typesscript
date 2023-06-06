@@ -47,35 +47,31 @@ export async function sendWelcomeEmail(workflowState: NewEmpFormFillWorkflowStat
   return newState;
 }
 ```
-Assuming that 
-We define the NewEmpFormFillWorkflow as follows. Please assume the workflow activities are already available and they adhere to the standard defined above. I.e. they will take in the workflow state as input and return the update new state. 
+Please assume the workflow activities are already available and they adhere to the standard defined above. I.e. they will take in the workflow state as input and return the update new state. 
+
+We define the NewEmpFormFillWorkflow as follows. We will use variable names directly from the workflow state and activity names to indicate how they should be used in the workflow definition.
 
 ```mermaid
 graph LR
-    A((Start)) --> B{Form Filled?}
-    B -- Yes --> C{follow up Task Exists?}
-    C -- Yes --> D[Call Activity: Complete Follow Up Task]
+    A((Start)) --> B{Check if newEmployeeFormFilled is true?}
+    B -- Yes --> C{Check if followUpTaskCreated is true ?}
+    C -- Yes --> D[Call Activity: completeFollowUpTask]
     D --> E((End))
     C -- No --> E
-    B -- No --> F{has periodGivenForFormFilling expired?}
+    B -- No --> F{has periodGivenForFormFilling duration expired?}
     F -- No -->B
-    F -- Yes -->G{has numberOfRemindersForFormFilling sent?}
+    F -- Yes -->G{Have we sent numberOfRemindersForFormFilling number of reminders?}
     %% Perhaps we need to have a different approach here to handle all reminders are sent
     G -- Yes -->A 
-    G -- No --> H[Call Activity: Send the Reminder]
-    H -->I{Followup Task Already Exists?}
-    I -- No --> J[Call Activity: Create Followup Task]
-    I -- Yes --> K[Call Activity: Update Followup Task Priority]
-    J -->L{Form Filled?}
+    G -- No --> H[Call Activity: sendReminderForFormFilling]
+    H -->I{Check if followUpTaskCreated is true ?}
+    I -- No --> J[Call Activity: createFollowUpTask]
+    I -- Yes --> K[Call Activity: updateFollowUpTaskPriority]
+    J -->L{Check if newEmployeeFormFilled is true?}
     K -->L
     L -- Yes -->C
-    L -- No --> M{Has formFilingReminderDuration expired?}
+    L -- No --> M{Has formFilingReminderDuration duration expired?}
     M -- No --> L
     M -- Yes -->G
-
-We also have the following Temporal Signals and their Corresponding handlers defined already
-
-filledNewEmpForm:
-    wf.setHandler(filledNewEmpForm, () => void(workflowState.newEmployeeFormFilled = true))
 
 Given the details above, can you crate the Temporal workflow code in Typescript for NewEmpFormFillWorkflow? Please ONLY use Temporal conditions, workflow sleep, Promise raise as required to model the logic
