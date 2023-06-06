@@ -73,7 +73,7 @@ export async function NewEmpFormFillWorkflow(initialState: NewEmpFormFillWorkflo
       for(let i = 1; i<numberOfRemindersForFormFilling; i++) {
         // TODO: send the reminder
         // TODO: Create or update (if already exists) the follow up task
-        if(await wf.condition(() => workflowState.newEmployeeFormFilled, formFilingReminderDuration)) {
+        if(await wf.condition(() => workflowState.newEmployeeFormFilled,  )) {
           // TODO: call the activity to complete the follow up task
           console.log('Call the activty to complete the follow up task')
           break

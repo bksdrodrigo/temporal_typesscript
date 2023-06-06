@@ -1,4 +1,4 @@
-import { SubscriptionWorkflowState } from "./new.emp.form.filll.workflow";
+import { NewEmpFormFillWorkflowState } from "./new.emp.form.filll.workflow";
 
 export async function greet(name: string): Promise<string> {
   return `Hello, ${name}!`;
