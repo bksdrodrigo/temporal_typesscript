@@ -1,28 +1,34 @@
 import { HRFollowUpTask, NewEmpFormFillState } from "./workflow";
+import { getContext } from "../core/interceptors";
 
 export async function sendWelcomeEmail(workflowState: NewEmpFormFillState): Promise<NewEmpFormFillState> {
+  const {logger} = getContext()
   const { employee: {
     email,
   }, welcomeEmailSent } = workflowState;
   if(welcomeEmailSent) return {...workflowState}
   // TODO: emailing logic goes here
+  logger.info(`Sending email to ${email}`)
   const newState = {...workflowState, welcomeEmailSent: true}
-  console.log(JSON.stringify(newState))
+  logger.info(JSON.stringify(newState))
   return newState;
 }
 
 export async function sendThankyouEmail(workflowState: NewEmpFormFillState): Promise<NewEmpFormFillState> {
+  const {logger} = getContext()
   const { employee: {
     email,
   }, thankyouEmailSent } = workflowState;
   if(thankyouEmailSent) return {...workflowState}
   // TODO: emailing logic goes here
+  logger.info(`Thank you email sent to: ${email}`)
   const newState = {...workflowState, thankyouEmailSent: true}
-  console.log(JSON.stringify(newState))
+  logger.info(JSON.stringify(newState))
   return newState;
 }
 
 export async function sendReminderEmail(workflowState: NewEmpFormFillState): Promise<NewEmpFormFillState> {
+  const {logger} = getContext()
   const { employee: {
     email,
   }, numberOfRemindersSent } = workflowState;
@@ -30,11 +36,13 @@ export async function sendReminderEmail(workflowState: NewEmpFormFillState): Pro
 
   const newNumberOfReminders = numberOfRemindersSent + 1
   const newState = {...workflowState, numberOfRemindersSent: newNumberOfReminders}
-  console.log(JSON.stringify(newState))
+  logger.info('Reminder Email Sent to: '+email)
+  logger.info(JSON.stringify(newState))
   return newState;
 }
 
 export async function creteFollowupTask(workflowState: NewEmpFormFillState): Promise<NewEmpFormFillState> {
+  const {logger} = getContext()
   const { numberOfRemindersSent, followUpTaskCreated, employee: { firstName, lastName, email} } = workflowState;
   if (followUpTaskCreated) return workflowState
   const followUpTask: HRFollowUpTask = {
@@ -44,11 +52,13 @@ export async function creteFollowupTask(workflowState: NewEmpFormFillState): Pro
     status: "NEW"
   }
   const newState = {...workflowState, followUpTaskCreated: true, followUpTask}
-  console.log(JSON.stringify(newState))
+  logger.info('Create Followup Task')
+  logger.info(JSON.stringify(newState))
   return newState;
 }
 
 export async function updateFolllowUpTask(workflowState: NewEmpFormFillState): Promise<NewEmpFormFillState> {
+  const {logger} = getContext()
   const { numberOfRemindersSent, followUpTask } = workflowState;
 
   const updatedFollowUpTask: HRFollowUpTask = {
@@ -57,11 +67,13 @@ export async function updateFolllowUpTask(workflowState: NewEmpFormFillState): P
     status: 'IN-PROGRESS'
   }
   const newState = {...workflowState, followUpTaskCreated: true, followUpTask: updatedFollowUpTask}
-  console.log(JSON.stringify(newState))
+  logger.info('Updated Followup Task')
+  logger.info(JSON.stringify(newState))
   return newState;
 }
 
 export async function completeFolllowupTask(workflowState: NewEmpFormFillState): Promise<NewEmpFormFillState> {
+  const {logger} = getContext()
   const { followUpTask } = workflowState;
 
   if (followUpTask) {
@@ -70,7 +82,8 @@ export async function completeFolllowupTask(workflowState: NewEmpFormFillState):
       status: 'COMPLETED'
     }
     const newState = {...workflowState, followUpTaskCreated: true, followUpTask: updatedFollowUpTask}
-    console.log(JSON.stringify(newState))
+    logger.info(`Complted Follow up Task`)
+    logger.info(JSON.stringify(newState))
     return newState;
   }
   return workflowState;

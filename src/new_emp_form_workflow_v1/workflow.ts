@@ -51,9 +51,8 @@ export async function NewEmployeeFormFillWorkflow(initialState: NewEmpFormFillSt
   const {sendWelcomeEmail,sendThankyouEmail, sendReminderEmail, creteFollowupTask, updateFolllowUpTask, completeFolllowupTask} = act;
   
   // Destruct the signals used in workflow and define the handlers
-  /// NB: workflow state can only be mutated within a signal handler ONLY. 
-  /// NEVER mutate workflow state within a query or within an activities, based on the outcome 
-  /// of an activity, main workflow execution flow can update 
+  /// NB: workflow state can only be mutated within a signal handlers and activities ONLY. 
+  /// NEVER mutate workflow state within a query
   /// We can pass the workflow state to activities so they can read about the workflow state
   const { formFillled } = signals
   const {getWorkflowState} = queries
@@ -64,7 +63,7 @@ export async function NewEmployeeFormFillWorkflow(initialState: NewEmpFormFillSt
    while(true) {
     workflowState = await sendWelcomeEmail(workflowState);
     if(await wf.condition(()=>workflowState.newEmployeeFormFilled, periodGivenForFormFilling)) {
-      // New Employee has filled the form
+    // if (await till(workflowState.newEmployeeFormFilled).or.timeOutIn(periodGivenForFormFilling)){      // New Employee has filled the form
       workflowState = await completeFolllowupTask(workflowState)
       workflowState = await sendThankyouEmail(workflowState)
       break;
@@ -74,6 +73,7 @@ export async function NewEmployeeFormFillWorkflow(initialState: NewEmpFormFillSt
         workflowState = await sendReminderEmail(workflowState)
         workflowState = workflowState.followUpTaskCreated? await updateFolllowUpTask(workflowState) : await creteFollowupTask(workflowState)
         if(await wf.condition(() => workflowState.newEmployeeFormFilled, formFilingReminderDuration)) {
+        // if(await till(workflowState.newEmployeeFormFilled).or.timeOutIn(formFilingReminderDuration)) {
           break;
         } else {
           continue;
