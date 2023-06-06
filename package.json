@@ -6,9 +6,9 @@
     "build": "tsc --build",
     "build.watch": "tsc --build --watch",
     "lint": "eslint .",
-    "start": "ts-node src/sample_workflow_v1/worker.ts",
-    "start.watch": "nodemon src/sample_workflow_v1/worker.ts",
-    "workflow": "ts-node src/sample_workflow_v1/client.ts"
+    "start": "ts-node src/new_emp_form_workflow_v1/worker.ts",
+    "start.watch": "nodemon src/new_emp_form_workflow_v1/worker.ts",
+    "workflow": "ts-node src/new_emp_form_workflow_v1/client.ts"
   },
   "nodemonConfig": {
     "execMap": {

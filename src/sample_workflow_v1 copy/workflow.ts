@@ -62,7 +62,7 @@ export async function SubscriptionWorkflowV1(initialState: SubscriptionWorkflowS
   const workflowSteps: WorkflowStep<SubscriptionWorkflowState> = {
     stepToExecute: sendWelcomeEmail,
     onSuccessStep: {
-      stepToExecute: { condition: workflowState.subscriptionCancelled==true, waitPeriod: trialPeriod},
+      stepToExecute: { condition: workflowState.subscriptionCancelled, waitPeriod: trialPeriod},
       onSuccessStep: {
         stepToExecute: sendCancellationEmailDuringTrialPeriod,
       },
